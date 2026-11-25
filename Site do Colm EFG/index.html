@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conecta Escola</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">
+      <img src="img/comb.png" alt="colmeia" class="img">
+    </div>
+    ColmEfg
+  </div>
+  <div class="header-right">
+    <div class="notification" onclick="toggleNotifications()">
+      🔔
+      <span class="notification-count" id="notificationCount">2</span>
+    </div>
+    <div class="avatar">AS</div>
+  </div>
+</header>
+
+<div class="notification-panel" id="notificationPanel">
+  <h3 style="margin-bottom:10px;">Notificações</h3>
+  <div id="notifications">
+    <div class="notification-item"> João entrou no seu projeto.</div>
+    <div class="notification-item"> Você recebeu um novo comentário.</div>
+  </div>
+</div>
+
+<div class="layout">
+
+  <aside class="sidebar">
+    <div class="menu">
+      <div class="menu-item active" data-page="feed" onclick="showPage('feed')"> Feed</div>
+      <div class="menu-item" data-page="projects" onclick="showPage('projects')"> Projetos</div>
+      <div class="menu-item" onclick="openCreatePost()"> Nova publicação</div>
+      <div class="menu-item" onclick="openCreateProject()"> Criar projeto</div>
+      <div class="menu-item" data-page="groups" onclick="showPage('groups')"> Grupos</div>
+      <div class="menu-item" data-page="moderation" onclick="showPage('moderation')"> Moderação</div>
+    </div>
+  </aside>
+
+  <main id="mainContent"></main>
+
+  <aside class="right-sidebar">
+    <div class="right-card">
+      <h3>Comunidade</h3>
+      <div class="stat"><span>Usuários</span><span>1.284</span></div>
+      <div class="stat"><span>Publicações</span><span>342</span></div>
+      <div class="stat"><span>Projetos ativos</span><span id="activeProjects">18</span></div>
+      <div class="stat"><span>Melhorias concluídas</span><span>27</span></div>
+    </div>
+
+    <div class="right-card">
+      <h3> Projetos populares</h3>
+
+      <div class="project-card">
+        <strong>Revitalização da quadra</strong>
+        <p style="font-size:13px;color:#64748b;margin-top:5px;">Melhorar pintura e iluminação.</p>
+        <div class="project-progress"><div style="width:80%"></div></div>
+        <small>8 de 10 participantes</small>
+      </div>
+
+      <div class="project-card">
+        <strong>Horta comunitária</strong>
+        <p style="font-size:13px;color:#64748b;margin-top:5px;">Criar uma horta para os alunos.</p>
+        <div class="project-progress"><div style="width:50%"></div></div>
+        <small>5 de 10 participantes</small>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<div class="modal-overlay" id="postModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Nova publicação</h2>
+      <button class="close" onclick="closeModal('postModal')">×</button>
+    </div>
+    <div class="form-group">
+      <label>Tipo</label>
+      <select id="postType">
+        <option value="problem">Problema / Reclamação</option>
+        <option value="suggestion">Sugestão</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Título</label><input type="text" id="postTitle" placeholder="Ex.: Banheiros precisam de manutenção" /></div>
+    <div class="form-group"><label>Descrição</label><textarea id="postDescription" placeholder="Descreva o problema ou sua sugestão..."></textarea></div>
+    <div class="form-group"><label>URL da foto (opcional)</label><input type="text" id="postImage" placeholder="https://..." /></div>
+    <div class="form-group"><label>Escola</label><input type="text" id="postSchool" placeholder="Nome da escola" /></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('postModal')">Cancelar</button>
+      <button class="btn btn-primary" onclick="createPost()">Publicar</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="projectModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Criar projeto de melhoria</h2>
+      <button class="close" onclick="closeModal('projectModal')">×</button>
+    </div>
+    <div class="form-group"><label>Nome do projeto</label><input type="text" id="projectTitle" placeholder="Ex.: Revitalização da biblioteca" /></div>
+    <div class="form-group"><label>Descrição do projeto</label><textarea id="projectDescription" placeholder="Explique o problema, objetivo e como o projeto pretende melhorar a escola..."></textarea></div>
+    <div class="form-group"><label>Fotos</label><input type="text" id="projectImage" placeholder="URL de uma imagem" /></div>
+    <div class="form-group"><label>Máximo de integrantes</label><input type="number" id="projectMax" min="1" max="100" value="10" /></div>
+    <div class="form-group"><label>Escola</label><input type="text" id="projectSchool" placeholder="Nome da escola" /></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('projectModal')">Cancelar</button>
+      <button class="btn btn-primary" onclick="createProject()">Enviar para moderação</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="chatModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <h2 id="chatTitle">Grupo do projeto</h2>
+        <small style="color:#64748b">Grupo da equipe</small>
+      </div>
+      <button class="close" onclick="closeModal('chatModal')">×</button>
+    </div>
+    <div class="chat">
+      <div class="chat-messages" id="chatMessages">
+        <div class="message"><div class="message-author">Maria</div><div class="message-content">Pessoal, já podemos começar a organizar as tarefas.</div></div>
+        <div class="message"><div class="message-author">João</div><div class="message-content">Eu posso verificar os materiais necessários.</div></div>
+      </div>
+      <div class="chat-input">
+        <input type="text" id="chatInput" placeholder="Digite uma mensagem..." onkeydown="if(event.key === 'Enter') sendMessage()" />
+        <button class="btn btn-primary" onclick="sendMessage()">Enviar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="utils.js"></script>
+<script src="notifications.js"></script>
+<script src="feed.js"></script>
+<script src="projects.js"></script>
+<script src="groups.js"></script>
+<script src="moderation.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
